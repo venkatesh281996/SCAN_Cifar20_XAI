@@ -8,9 +8,7 @@
 0. [Results](#results)
 
 ## Objective
-To perform clustering on the image dataset using SCAN with visual explainations.
-Reference Paper: https://arxiv.org/pdf/2005.12320.pdf
-
+To cluster images from a dataset using SCAN with visual explanations. Refer to the Reference Paper for detailed information.
 
 ## Installation
 The code runs with recent Pytorch versions, e.g. 2.0.1. 
@@ -29,11 +27,13 @@ We refer to the `requirements.txt` file for an overview of the packages in the e
 We have trained the SCAN model over the standard CIFAR100-20 image training dataset and persisted that model into the repository at `repository_eccv\cifar-20\scan\model.pth.tar`<br>
 Similarly, we have refined the model using self-labeling and persisted that model at `repository_eccv\cifar-20\selflabel\model.pth.tar`
 
-### Steps to execute
-The configuration files can be found in the `configs/` directory. The clustering procedure consists of the following steps:
-- __STEP 1__: Perform K nearest neighbours on each image to find its candidate images i.e. `find_candidates.py`
-- __STEP 2__: Perform clustering on candidate images using our model i.e. `app.py`
-- __STEP 3__: Display evaluation charts i.e. `eval_charts.py`
+SCAN was imported from [here](https://github.com/wvangansbeke/Unsupervised-Classification)<br>
+The SCAN README file can be found [here](SCAN_README.md)<br>
+
+### Execution Steps
+STEP 1: Use K-nearest neighbors to find candidate images for each image with find_k_nearest_neighbours.py.
+STEP 2: Cluster the candidate images using the model with Cluster_img.py.
+STEP 3: Display evaluation charts with eval_charts.py.
 
 For example, run the following commands to perform our method on CIFAR20:
 ```shell
@@ -42,20 +42,20 @@ python app.py --n 300 --query 500 --config_exp configs/scan/scan_cifar20.yml --m
 python eval_charts.py --query 500 --config_exp configs/scan/scan_cifar20.yml --model repository_eccv/cifar-20/scan/model.pth.tar
 ```
 
-To apply grad-cam on clustered dataset, add --visualize_prototypes in the above command as follows:
+To apply LIME on the clustered dataset, add the --visualize_prototypes flag as follows:
 ```shell
-python app.py --n 300 --query 500 --config_exp configs/scan/scan_cifar20.yml --model repository_eccv/cifar-20/scan/model.pth.tar --visualize_prototypes
+python Lime.py --n 300 --query 500 --config_exp configs/scan/scan_cifar20.yml --model repository_eccv/cifar-20/scan/model.pth.tar --visualize_prototypes
+
 ```
 It will show prototype image of each cluster and it's respective heatmap. In the heatmap, you can see what were the most coontributing features for that cluster.
 
 <p align="center">
-    <img src="images/Figure_1.png" width="300"/>
-    <img src="images/Figure_1_heatmap.png" width="300"/>
+    <img src="images/example1.png" width="300"/>
+    
 </p>
 
 <p align="center">
-    <img src="images/Figure_2.png" width="300"/>
-    <img src="images/Figure_2_heatmap.png" width="300"/>
+    <img src="images/cluster wise feature highlight.png" width="300"/>
 </p>
 
 ### Results
@@ -72,7 +72,7 @@ After evaluating clustering for dynamic number of candidate images [50, 100,...,
 
 And the charts we generated are as follows:
 <p align="center">
-    <img src="images/ACC.png"/>
+    <img src="images/F1andACC.png"/>
     <img src="images/ARI.png"/>
     <img src="images/NMI.png"/>
     <img src="images/ACCTop5.png"/>
